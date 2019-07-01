@@ -8,26 +8,24 @@ import java.io.Serializable;
 public class PhoneNumber implements Serializable {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tel_number")
-    private String telNumber;
+    @Column(name = "tel_numbers")
+    private Long telNumber;
 
-    @Column(name = "mob_number")
-    private String mobNumber;
-
-    //constructors
+    @Column(name = "mobile_numbers")
+    private Long mobileNumber;
 
     public PhoneNumber() {
+
     }
 
-    public PhoneNumber(String telNumber, String mobNumber) {
+    public PhoneNumber(Long telNumber, Long mobileNumber) {
         this.telNumber = telNumber;
-        this.mobNumber = mobNumber;
+        this.mobileNumber = mobileNumber;
     }
-
-    //setter and getter
 
     public Long getId() {
         return id;
@@ -37,28 +35,28 @@ public class PhoneNumber implements Serializable {
         this.id = id;
     }
 
-    public String getTelNumber() {
+    public Long getTelNumber() {
         return telNumber;
     }
 
-    public void setTelNumber(String telNumber) {
+    public void setTelNumber(Long telNumber) {
         this.telNumber = telNumber;
     }
 
-    public String getMobNumber() {
-        return mobNumber;
+    public Long getMobileNumber() {
+        return mobileNumber;
     }
 
-    public void setMobNumber(String mobNumber) {
-        this.mobNumber = mobNumber;
+    public void setMobileNumber(Long mobileNumber) {
+        this.mobileNumber = mobileNumber;
     }
 
     @Override
     public String toString() {
         return "PhoneNumber{" +
                 "id=" + id +
-                ", telNumber='" + telNumber + '\'' +
-                ", mobNumber='" + mobNumber + '\'' +
+                ", telNumber=" + telNumber +
+                ", mobileNumber=" + mobileNumber +
                 '}';
     }
 }

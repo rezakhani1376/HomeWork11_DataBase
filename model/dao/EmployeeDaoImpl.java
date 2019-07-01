@@ -5,64 +5,61 @@ import ir.maktab.HomeWork11_DataBase.model.Employee;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EmployeeDaoImpl extends BaseDaoImpl<Employee> implements EmployeeDao {
 
-    private final SessionFactory factory;
-
-    public EmployeeDaoImpl(SessionFactory factory){
-
+    public EmployeeDaoImpl(SessionFactory factory) {
         super(factory);
-        this.factory = factory;
     }
+
     @Override
     protected String getEntityName() {
         return "Employee";
     }
-    @Override
-    public Double maxSalaryByCity(String city) {
+
+
+        public List<Employee> maxSalaryBaseOnCity(String str){
         Session session = factory.openSession();
 
-        Double salaryByCity =(Double) session.createQuery("select max(emp.salary) from Employee emp join emp.addresses add where add.city =:c ")
-                .setParameter("c",city).uniqueResult();
+        List<Employee> employees = new ArrayList<>();
+
+        employees = session.createQuery("select e.address.city, MAX(salary) from  Employee e where e.address.city =:str")
+                .setParameter("str", str)
+                .getResultList();
+
 
         session.close();
 
-        return salaryByCity;
+        return employees;
     }
 
-    @Override
-    public Employee employeeMaxSalaryByCity(String city) {
+    public List<Employee> findByPostalCode(Long postalCode){
         Session session = factory.openSession();
 
-        Employee employee =(Employee) session.createQuery("select emp from Employee emp where emp.salary = (select max(e.salary) from Employee e join e.addresses addr where addr.city=:c)")
-                .setParameter("c",city).getSingleResult();
+        List<Employee> employees;
+
+        employees = session.createQuery("from Employee e where e.address.postalCode =:postalCode")
+                .setParameter("postalCode", postalCode)
+                .getResultList();;
 
         session.close();
 
-        return employee;
+        return employees;
     }
-    @Override
-    public Employee findEmpByPostalCode(String postalCode) {
+
+    public List<Employee> findByPhoneNumber(Long phoneNumber){
         Session session = factory.openSession();
 
-        Object employee = session.createQuery("select emp from Employee emp join emp.addresses add where add.postalCode=:p")
-                .setParameter("p",postalCode).getSingleResult();
+        List<Employee> employees;
 
-        Employee employee1 = (Employee) employee;
+        employees = session.createQuery("from Employee e where e.phoneNumber.mobileNumber =:phoneNumber")
+                .setParameter("phoneNumber", phoneNumber)
+                .getResultList();
 
         session.close();
 
-        return employee1;
-    }
-    @Override
-    public Employee findEmpByTelNumber(String telNumber) {
-        Session session = factory.openSession();
-
-        Employee employee = (Employee) session.createQuery("select emp from Employee emp join emp.addresses add join add.phoneNumberList num where num.telNumber = :n" )
-                .setParameter("n",telNumber).getSingleResult();
-
-        session.close();
-
-        return employee;
+        return employees;
     }
 }

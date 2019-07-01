@@ -2,6 +2,7 @@ package ir.maktab.HomeWork11_DataBase.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,28 +16,24 @@ public class Employee implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "emp_code")
-    private String empCode;
+    @Column(name = "empCode")
+    private int empCode;
 
     @Column(name = "salary")
     private Double salary;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinColumn(name = "employee_id")
-    private List<Address> addresses;
-
-    //constructors
+    @OneToMany(mappedBy = "employee", cascade = {CascadeType.REMOVE,CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Address> address;
 
     public Employee() {
+
     }
 
-    public Employee(String name, String empCode, Double salary) {
+    public Employee(String name, int empCode, Double salary) {
         this.name = name;
         this.empCode = empCode;
         this.salary = salary;
     }
-
-    //setter and getter
 
     public Long getId() {
         return id;
@@ -54,11 +51,11 @@ public class Employee implements Serializable {
         this.name = name;
     }
 
-    public String getEmpCode() {
+    public int getEmpCode() {
         return empCode;
     }
 
-    public void setEmpCode(String empCode) {
+    public void setEmpCode(int empCode) {
         this.empCode = empCode;
     }
 
@@ -70,18 +67,16 @@ public class Employee implements Serializable {
         this.salary = salary;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
+    public List<Address> getAddress() {
+        return address;
     }
 
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
-
-    public void print(){
-        for(Address address : this.addresses){
-            address.toString();
+    public void setAddress(Address address) {
+        if (this.address == null) {
+            this.address=new ArrayList<Address>();
         }
+        this.address.add(address);
+        address.setEmployee(this);
     }
 
     @Override
@@ -89,10 +84,9 @@ public class Employee implements Serializable {
         return "Employee{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", empCode='" + empCode + '\'' +
+                ", empCode=" + empCode +
                 ", salary=" + salary +
-                ", addresses=" + addresses +
+                ", address=" + address +
                 '}';
     }
-
 }

@@ -2,6 +2,7 @@ package ir.maktab.HomeWork11_DataBase.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -9,39 +10,36 @@ import java.util.List;
 public class Address implements Serializable {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "postal_code")
-    private String postalCode;
+    @Column(name = "postalCode")
+    private Long postaCode;
 
-    @Column(name = "postal_address")
+    @Column(name = "postalAddress")
     private String postalAddress;
 
     @Column(name = "city")
     private String city;
 
     @ManyToOne
+    @JoinColumn(name = "emp_id")
     private Employee employee;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     @JoinColumn(name = "address_id")
-    private List<PhoneNumber> phoneNumberList;
-
-    //constructors
+    private List<PhoneNumber> phoneNumber;
 
     public Address() {
+
     }
 
-    public Address(String postalCode, String postalAddress, String city, Employee employee, List<PhoneNumber> phoneNumberList) {
-        this.postalCode = postalCode;
+    public Address(Long postaCode, String postalAddress, String city) {
+        this.postaCode = postaCode;
         this.postalAddress = postalAddress;
         this.city = city;
-        this.employee = employee;
-        this.phoneNumberList = phoneNumberList;
     }
-
-    //setter and getter
 
     public Long getId() {
         return id;
@@ -51,12 +49,12 @@ public class Address implements Serializable {
         this.id = id;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public Long getPostaCode() {
+        return postaCode;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+    public void setPostaCode(Long postaCode) {
+        this.postaCode = postaCode;
     }
 
     public String getPostalAddress() {
@@ -83,22 +81,30 @@ public class Address implements Serializable {
         this.employee = employee;
     }
 
-    public List<PhoneNumber> getPhoneNumberList() {
-        return phoneNumberList;
+    public List<PhoneNumber> getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhoneNumberList(List<PhoneNumber> phoneNumberList) {
-        this.phoneNumberList = phoneNumberList;
+    public void setPhoneNumber(List<PhoneNumber> phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
     public String toString() {
         return "Address{" +
                 "id=" + id +
-                ", postalCode='" + postalCode + '\'' +
+                ", postaCode=" + postaCode +
                 ", postalAddress='" + postalAddress + '\'' +
                 ", city='" + city + '\'' +
-                ", phoneNumberList=" + phoneNumberList +
+                ", employee=" + employee +
+                ", phoneNumber=" + phoneNumber +
                 '}';
+    }
+
+    public void addPhoneNumber(PhoneNumber number) {
+        if (this.phoneNumber == null) {
+            this.phoneNumber = new ArrayList<>();
+        }
+        this.phoneNumber.add(number);
     }
 }

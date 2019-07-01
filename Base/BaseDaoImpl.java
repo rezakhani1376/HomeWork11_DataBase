@@ -5,11 +5,11 @@ import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 
-public abstract class BaseDaoImpl <E extends Serializable> implements BaseDao<E>{
+public abstract class BaseDaoImpl<E extends Serializable> implements BaseDao<E> {
 
-    private final SessionFactory factory;
+    protected final SessionFactory factory;
 
-    public BaseDaoImpl(SessionFactory factory) {
+    protected BaseDaoImpl(SessionFactory factory) {
         this.factory = factory;
     }
 
@@ -21,37 +21,45 @@ public abstract class BaseDaoImpl <E extends Serializable> implements BaseDao<E>
 
         session.beginTransaction();
 
-        session.persist(e);
+        session.save(e);
 
         session.getTransaction().commit();
 
         session.close();
     }
 
+
     @Override
-    public void update(E e) {
+    public E read(Serializable id) {
 
         Session session = factory.openSession();
 
         session.beginTransaction();
 
-        session.update(e);
+        E e = (E) session.get(getEntityName(), id);
 
         session.getTransaction().commit();
 
         session.close();
+
+        return e;
     }
 
+
     @Override
-    public void read(Serializable id) {
+    public E update(E e) {
 
         Session session = factory.openSession();
 
-        Object o = session.createQuery("from "+ getEntityName() +" entity where entity.ed = " + id)
-                .getSingleResult();
-        E e = (E) o;
+        session.beginTransaction();
+
+        session.save(e);
+
+        session.getTransaction().commit();
 
         session.close();
+
+        return e;
     }
 
     @Override
@@ -61,7 +69,7 @@ public abstract class BaseDaoImpl <E extends Serializable> implements BaseDao<E>
 
         session.beginTransaction();
 
-        session.createQuery("delete from " + getEntityName() + " as entity where entity.id = " + id);
+        session.createQuery("delete from" + getEntityName() + "as entity where entity id =" + id);
 
         session.getTransaction().commit();
 
