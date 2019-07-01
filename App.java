@@ -3,14 +3,14 @@ package ir.maktab.HomeWork11_DataBase;
 import ir.maktab.HomeWork11_DataBase.model.Address;
 import ir.maktab.HomeWork11_DataBase.model.Employee;
 import ir.maktab.HomeWork11_DataBase.model.PhoneNumber;
-import ir.maktab.HomeWork11_DataBase.model.dao.EmployeeDao;
-import ir.maktab.HomeWork11_DataBase.model.dao.EmployeeDaoImpl;
+import ir.maktab.HomeWork11_DataBase.model.dao.*;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Hello world!
@@ -21,6 +21,9 @@ public class App {
         SessionFactory factory = new Configuration().configure().buildSessionFactory();
 
         EmployeeDao employeeDAO = new EmployeeDaoImpl(factory);
+        /*AddressDao addressDao =new AddressDaoImpl(factory);
+        PhoneNumberDao phoneNumberDao=new PhoneNumberDaoImpl(factory);*/
+        Session session = factory.openSession();
 
         PhoneNumber phoneNumber1 = new PhoneNumber(26523656L, 60345654L);
         PhoneNumber phoneNumber2 = new PhoneNumber(26598656L, 5195654L);
@@ -58,6 +61,17 @@ public class App {
         employeeDAO.create(employee3);
         employeeDAO.create(employee4);
         employeeDAO.create(employee5);
+
+       /* List<Employee> salary =((EmployeeDaoImpl) employeeDAO).maxSalaryBaseOnCity("Tehran");*/
+
+        Employee employee = (Employee) ((EmployeeDaoImpl) employeeDAO).maxSalaryBaseOnCity("Tehran");
+        Employee employeePostalCode = (Employee) ((EmployeeDaoImpl) employeeDAO).findByPostalCode(1233L);
+        Employee employeeTelNumber = (Employee) ((EmployeeDaoImpl) employeeDAO).findByPhoneNumber(9812L);
+
+        /*System.out.println(salary);*/
+        System.out.println(employee);
+        System.out.println(employeePostalCode);
+        System.out.println(employeeTelNumber);
 
 
         factory.close();
