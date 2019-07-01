@@ -62,16 +62,18 @@ public class App {
         employeeDAO.create(employee4);
         employeeDAO.create(employee5);
 
-       /* List<Employee> salary =((EmployeeDaoImpl) employeeDAO).maxSalaryBaseOnCity("Tehran");*/
+        Double salary = employeeDAO.maxSalaryByCity("tehran");
 
-        Employee employee = (Employee) ((EmployeeDaoImpl) employeeDAO).maxSalaryBaseOnCity("Tehran");
-        Employee employeePostalCode = (Employee) ((EmployeeDaoImpl) employeeDAO).findByPostalCode(1233L);
-        Employee employeeTelNumber = (Employee) ((EmployeeDaoImpl) employeeDAO).findByPhoneNumber(9812L);
 
-        /*System.out.println(salary);*/
+        Employee employee = employeeDAO.employeeMaxSalaryByCity("tehran");
+        Employee employeefindPostalCode = employeeDAO.findEmpByPostalCode("111");
+        Employee employeeTelNumber = employeeDAO.findEmpByTelNumber("9812");
+
+        System.out.println(salary);
         System.out.println(employee);
-        System.out.println(employeePostalCode);
+        System.out.println(employeefindPostalCode);
         System.out.println(employeeTelNumber);
+
 
 
         factory.close();
